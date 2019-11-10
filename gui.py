@@ -13,53 +13,63 @@ Close
 
 '''
 
-
 from tkinter import *
 
 from Bookstore import backend
 
 
 def view_command():
-    list1.delete(0, END)
+    """Function created in order to see all  books"""
+    list1.delete(0, END)  # delete the entry so you will not see again in the end of the list the books
     for row in backend.view():
         list1.insert(END, row)
 
 
 def search_command():
+    """Function created in order to search for a book by using any of the fields:title,year,isbn or author"""
     list1.delete(0, END)
     for row in backend.search(title_text.get(), author_text.get(), year_text.get(), isbn_text.get()):
         list1.insert(END, row)
 
 
 def add_command():
-    backend.insert(title_text.get(), author_text.get(), year_text.get(), isbn_text.get())
-    list1.delete(0, END)
-    list1.insert(END, (title_text.get(), author_text.get(), year_text.get(), isbn_text.get()))
+    """Function created in order to add new books """
+    if len(title_text.get()) > 0:  # if the title is empty you can not add a new book
+        backend.insert(title_text.get(), author_text.get(), year_text.get(), isbn_text.get())
+        list1.delete(0, END)
+        list1.insert(END, (title_text.get(), author_text.get(), year_text.get(), isbn_text.get()))
 
 
 def get_selected_row(event):
-     global selected_tuple
-     try:
+    """Function created in order to select a desired book from the list box and apply the next actions:
+    *delete
+    *update
+    """
+    global selected_tuple
+    try:
         index = list1.curselection()[0]
         selected_tuple = list1.get(index)
-        e1.delete(0,END)
-        e1.insert(END,selected_tuple[1])
+        e1.delete(0, END)
+        e1.insert(END, selected_tuple[1])
         e2.delete(0, END)
-        e2.insert(END,selected_tuple[2])
+        e2.insert(END, selected_tuple[2])
         e3.delete(0, END)
-        e3.insert(END,selected_tuple[3])
+        e3.insert(END, selected_tuple[3])
         e4.delete(0, END)
-        e4.insert(END,selected_tuple[4])
-     except IndexError:
-            pass
+        e4.insert(END, selected_tuple[4])
+    except IndexError:
+        pass
+
 
 def delete_command():
+    '''Function created in order to delete a entry'''
     backend.delete(selected_tuple[0])
 
 
-
 def update_command():
-    backend.update(selected_tuple[0],title_text.get(), author_text.get(), year_text.get(), isbn_text.get())
+    '''Update a selected book fields'''
+    backend.update(selected_tuple[0], title_text.get(), author_text.get(), year_text.get(), isbn_text.get())
+
 
 window = Tk()
 
@@ -112,13 +122,13 @@ b2.grid(row=3, column=3)
 b3 = Button(window, text='Add entry', width=12, command=add_command)
 b3.grid(row=4, column=3)
 
-b4 = Button(window, text='Update', width=12,command=update_command)
+b4 = Button(window, text='Update', width=12, command=update_command)
 b4.grid(row=5, column=3)
 
 b5 = Button(window, text='Delete', width=12, command=delete_command)
 b5.grid(row=6, column=3)
 
-b6 = Button(window, text='Close', width=12,command=window.destroy)
+b6 = Button(window, text='Close', width=12, command=window.destroy)
 b6.grid(row=7, column=3)
 
 window.mainloop()
